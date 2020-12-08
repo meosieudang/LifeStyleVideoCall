@@ -39,4 +39,26 @@ export default class CallService {
       this.mediaDevices = [];
     }
   };
+
+  switchCamera = (localStream) => {
+    localStream.getVideoTracks().forEach((track) => track._switchCamera());
+  };
+
+  setAudioMuteState = (mute) => {
+    if (!this._session) return;
+    if (mute) {
+      this._session.mute('audio');
+    } else {
+      this._session.unmute('audio');
+    }
+  };
+
+  setVideoMuteState = (mute) => {
+    if (!this._session) return;
+    if (mute) {
+      this._session.mute('video');
+    } else {
+      this._session.unmute('video');
+    }
+  };
 }
