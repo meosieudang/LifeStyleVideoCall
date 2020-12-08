@@ -2,11 +2,21 @@ import React, {useEffect} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {AuthService, CallService} from './src';
 import ConnectyCube from 'react-native-connectycube';
+import config from './src/config';
+import Sound from 'react-native-sound';
 
 const App = () => {
   useEffect(() => {
-    AuthService.init();
+    AuthService.init(...config);
+    setTimeout(() => {
+      // outgoingCall.setNumberOfLoops(-1);
+      // outgoingCall.play();
+    }, 2000);
   }, []);
+
+  const outgoingCall = new Sound(require('./sounds/dialing.mp3'));
+  // incomingCall = new Sound(require('../../assets/sounds/calling.mp3'));
+  // endCall = new Sound(require('../../assets/sounds/end_call.mp3'));
 
   return (
     <View style={{marginTop: 50}}>

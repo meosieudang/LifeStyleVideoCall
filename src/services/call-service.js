@@ -14,10 +14,11 @@ export default class CallService {
 
   startCall = (ids) => {
     const options = {};
-    console.log(ConnectyCube, 'type', ids);
     const type = ConnectyCube.videochat.CallType.VIDEO; // AUDIO is also possible
+
     this._session = ConnectyCube.videochat.createNewSession(ids, type, options);
     this.setMediaDevices();
+    this.playSound('outgoing');
 
     return this._session
       .getUserMedia(CallService.MEDIA_OPTIONS)
@@ -28,11 +29,11 @@ export default class CallService {
   };
 
   stopCall = () => {
-    // this.stopSounds();
+    this.stopSounds();
 
     if (this._session) {
       console.log(this._session, 'session');
-      // this.playSound('end');
+      this.playSound('end');
       this._session.stop({});
       ConnectyCube.videochat.clearSession(this._session.ID);
       this._session = null;
@@ -59,6 +60,34 @@ export default class CallService {
       this._session.mute('video');
     } else {
       this._session.unmute('video');
+    }
+  };
+
+  playSound = (type) => {
+    switch (type) {
+      case 'outgoing':
+        this.outgoingCall.setNumberOfLoops(-1);
+        this.outgoingCall.play();
+        break;
+      case 'incoming':
+        this.incomingCall.setNumberOfLoops(-1);
+        this.incomingCall.play();
+        break;
+      case 'end':
+        this.endCall.play();
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  stopSounds = () => {
+    if (this.incomingCall.isPlaying()) {
+      this.incomingCall.pause();
+    }
+    if (this.outgoingCall.isPlaying()) {
+      this.outgoingCall.pause();
     }
   };
 }
