@@ -6,6 +6,10 @@ export default class CallService {
   _session = null;
   mediaDevices = [];
 
+  outgoingCall = new Sound(require('../../sounds/dialing.mp3'));
+  incomingCall = new Sound(require('../../sounds/calling.mp3'));
+  endCall = new Sound(require('../../sounds/end_call.mp3'));
+
   setMediaDevices() {
     return ConnectyCube.videochat.getMediaDevices().then((mediaDevices) => {
       this.mediaDevices = mediaDevices;
