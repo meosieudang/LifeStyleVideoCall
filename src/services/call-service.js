@@ -1,4 +1,5 @@
 import ConnectyCube from 'react-native-connectycube';
+import Sound from 'react-native-sound';
 
 export default class CallService {
   static MEDIA_OPTIONS = {audio: true, video: {facingMode: 'user'}};
