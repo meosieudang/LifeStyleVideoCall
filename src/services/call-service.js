@@ -11,11 +11,26 @@ export default class CallService {
   incomingCall = new Sound(require('../../sounds/calling.mp3'));
   endCall = new Sound(require('../../sounds/end_call.mp3'));
 
+  getSession = () => this._session;
+
   setMediaDevices() {
     return ConnectyCube.videochat.getMediaDevices().then((mediaDevices) => {
       this.mediaDevices = mediaDevices;
     });
   }
+
+  acceptCall = (session) => {
+    this.stopSounds();
+    this._session = session;
+    this.setMediaDevices();
+
+    return this._session
+      .getUserMedia(CallService.MEDIA_OPTIONS)
+      .then((stream) => {
+        this._session.accept({});
+        return stream;
+      });
+  };
 
   startCall = (ids) => {
     const options = {};
@@ -37,13 +52,17 @@ export default class CallService {
     this.stopSounds();
 
     if (this._session) {
-      console.log(this._session, 'session');
       this.playSound('end');
       this._session.stop({});
       ConnectyCube.videochat.clearSession(this._session.ID);
       this._session = null;
       this.mediaDevices = [];
     }
+  };
+
+  rejectCall = (session, extension) => {
+    this.stopSounds();
+    session.reject(extension);
   };
 
   switchCamera = (localStream) => {

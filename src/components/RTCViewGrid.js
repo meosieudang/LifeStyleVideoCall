@@ -1,8 +1,37 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, Image} from 'react-native';
 import {RTCView} from 'react-native-connectycube';
+import {BlurView} from '@react-native-community/blur';
 
-const RTCViewRendered = ({userId, stream}) => {
+const URI =
+  'https://cdn.pixabay.com/photo/2020/12/01/10/03/cathedral-5793622_1280.jpg';
+
+const RTCViewRendered = ({
+  userId,
+  stream,
+  muteVideoOpponent,
+  showCamera,
+  muteUserId,
+}) => {
+  if (
+    (userId === muteUserId && muteVideoOpponent) ||
+    (userId === 'localStream' && !showCamera)
+  )
+    return (
+      <View style={styles.blackView}>
+        <Image
+          key={'blurryImage'}
+          source={{uri: URI}}
+          style={styles.absolute}
+        />
+        <BlurView
+          style={styles.absolute}
+          blurType={'dark'}
+          blurAmount={10}
+          reducedTransparencyFallbackColor="white"
+        />
+      </View>
+    );
   if (stream) {
     return (
       <RTCView
@@ -22,7 +51,7 @@ const RTCViewRendered = ({userId, stream}) => {
   );
 };
 
-const RTCViewGrid = ({streams}) => {
+const RTCViewGrid = ({streams, muteVideoOpponent, showCamera, muteUserId}) => {
   const streamsCount = streams.length;
   let RTCListView = null;
 
@@ -32,6 +61,8 @@ const RTCViewGrid = ({streams}) => {
         <RTCViewRendered
           userId={streams[0].userId}
           stream={streams[0].stream}
+          muteVideoOpponent={muteVideoOpponent}
+          showCamera={showCamera}
         />
       );
       break;
@@ -42,10 +73,16 @@ const RTCViewGrid = ({streams}) => {
           <RTCViewRendered
             userId={streams[0].userId}
             stream={streams[0].stream}
+            muteVideoOpponent={muteVideoOpponent}
+            showCamera={showCamera}
+            muteUserId={muteUserId}
           />
           <RTCViewRendered
             userId={streams[1].userId}
             stream={streams[1].stream}
+            muteVideoOpponent={muteVideoOpponent}
+            showCamera={showCamera}
+            muteUserId={muteUserId}
           />
         </View>
       );
@@ -58,15 +95,21 @@ const RTCViewGrid = ({streams}) => {
             <RTCViewRendered
               userId={streams[0].userId}
               stream={streams[0].stream}
+              muteVideoOpponent={muteVideoOpponent}
+              showCamera={showCamera}
             />
             <RTCViewRendered
               userId={streams[1].userId}
               stream={streams[1].stream}
+              muteVideoOpponent={muteVideoOpponent}
+              showCamera={showCamera}
             />
           </View>
           <RTCViewRendered
             userId={streams[2].userId}
             stream={streams[2].stream}
+            muteVideoOpponent={muteVideoOpponent}
+            showCamera={showCamera}
           />
         </View>
       );
@@ -79,20 +122,28 @@ const RTCViewGrid = ({streams}) => {
             <RTCViewRendered
               userId={streams[0].userId}
               stream={streams[0].stream}
+              muteVideoOpponent={muteVideoOpponent}
+              showCamera={showCamera}
             />
             <RTCViewRendered
               userId={streams[1].userId}
               stream={streams[1].stream}
+              muteVideoOpponent={muteVideoOpponent}
+              showCamera={showCamera}
             />
           </View>
           <View style={styles.inRow}>
             <RTCViewRendered
               userId={streams[2].userId}
               stream={streams[2].stream}
+              muteVideoOpponent={muteVideoOpponent}
+              showCamera={showCamera}
             />
             <RTCViewRendered
               userId={streams[3].userId}
               stream={streams[3].stream}
+              muteVideoOpponent={muteVideoOpponent}
+              showCamera={showCamera}
             />
           </View>
         </View>
@@ -119,5 +170,12 @@ const styles = StyleSheet.create({
   inRow: {
     flex: 1,
     flexDirection: 'row',
+  },
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
 });
