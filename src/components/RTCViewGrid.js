@@ -1,7 +1,8 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, View, Image} from 'react-native';
 import {RTCView} from 'react-native-connectycube';
 import {BlurView} from '@react-native-community/blur';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const URI =
   'https://cdn.pixabay.com/photo/2020/12/01/10/03/cathedral-5793622_1280.jpg';
@@ -9,16 +10,23 @@ const URI =
 const RTCViewRendered = ({
   userId,
   stream,
-  muteVideoOpponent,
   showCamera,
-  muteUserId,
+  muteVideoIds = [],
+  muteMicIds = [],
+  showMic,
 }) => {
-  if (
-    (userId === muteUserId && muteVideoOpponent) ||
-    (userId === 'localStream' && !showCamera)
-  )
+  const hasShowMic =
+    (userId === 'localStream' && !showMic) || muteMicIds.includes(userId);
+  const hasShowCam =
+    (userId === 'localStream' && !showCamera) || muteVideoIds.includes(userId);
+  if (hasShowCam)
     return (
       <View style={styles.blackView}>
+        <View style={styles.wrapMic}>
+          {hasShowMic && (
+            <Icon name={'mic-off-outline'} size={35} color={'white'} />
+          )}
+        </View>
         <Image
           key={'blurryImage'}
           source={{uri: URI}}
@@ -28,12 +36,19 @@ const RTCViewRendered = ({
           style={styles.absolute}
           blurType={'dark'}
           blurAmount={10}
-          reducedTransparencyFallbackColor="white"
+          reducedTransparencyFallbackColor={'white'}
         />
       </View>
     );
-  if (stream) {
-    return (
+
+  if (!stream) return null;
+  return (
+    <View style={styles.blackView}>
+      <View style={styles.wrapMic}>
+        {hasShowMic && (
+          <Icon name={'mic-off-outline'} size={35} color={'white'} />
+        )}
+      </View>
       <RTCView
         mirror={true}
         objectFit="cover"
@@ -41,18 +56,14 @@ const RTCViewRendered = ({
         key={userId}
         streamURL={stream.toURL()}
       />
-    );
-  }
-  return (
-    <View style={styles.blackView}>
-      <Text style={{color: 'white'}}>loading</Text>
-      {/* <CallingLoader name={CallService.getUserById(userId, 'name')} /> */}
     </View>
   );
 };
 
-const RTCViewGrid = ({streams, muteVideoOpponent, showCamera, muteUserId}) => {
+const RTCViewGrid = (props) => {
+  const {streams, showCamera, muteVideoIds} = props;
   const streamsCount = streams.length;
+
   let RTCListView = null;
 
   switch (streamsCount) {
@@ -61,8 +72,7 @@ const RTCViewGrid = ({streams, muteVideoOpponent, showCamera, muteUserId}) => {
         <RTCViewRendered
           userId={streams[0].userId}
           stream={streams[0].stream}
-          muteVideoOpponent={muteVideoOpponent}
-          showCamera={showCamera}
+          {...props}
         />
       );
       break;
@@ -73,16 +83,12 @@ const RTCViewGrid = ({streams, muteVideoOpponent, showCamera, muteUserId}) => {
           <RTCViewRendered
             userId={streams[0].userId}
             stream={streams[0].stream}
-            muteVideoOpponent={muteVideoOpponent}
-            showCamera={showCamera}
-            muteUserId={muteUserId}
+            {...props}
           />
           <RTCViewRendered
             userId={streams[1].userId}
             stream={streams[1].stream}
-            muteVideoOpponent={muteVideoOpponent}
-            showCamera={showCamera}
-            muteUserId={muteUserId}
+            {...props}
           />
         </View>
       );
@@ -95,21 +101,18 @@ const RTCViewGrid = ({streams, muteVideoOpponent, showCamera, muteUserId}) => {
             <RTCViewRendered
               userId={streams[0].userId}
               stream={streams[0].stream}
-              muteVideoOpponent={muteVideoOpponent}
-              showCamera={showCamera}
+              {...props}
             />
             <RTCViewRendered
               userId={streams[1].userId}
               stream={streams[1].stream}
-              muteVideoOpponent={muteVideoOpponent}
-              showCamera={showCamera}
+              {...props}
             />
           </View>
           <RTCViewRendered
             userId={streams[2].userId}
             stream={streams[2].stream}
-            muteVideoOpponent={muteVideoOpponent}
-            showCamera={showCamera}
+            {...props}
           />
         </View>
       );
@@ -122,28 +125,24 @@ const RTCViewGrid = ({streams, muteVideoOpponent, showCamera, muteUserId}) => {
             <RTCViewRendered
               userId={streams[0].userId}
               stream={streams[0].stream}
-              muteVideoOpponent={muteVideoOpponent}
-              showCamera={showCamera}
+              {...props}
             />
             <RTCViewRendered
               userId={streams[1].userId}
               stream={streams[1].stream}
-              muteVideoOpponent={muteVideoOpponent}
-              showCamera={showCamera}
+              {...props}
             />
           </View>
           <View style={styles.inRow}>
             <RTCViewRendered
               userId={streams[2].userId}
               stream={streams[2].stream}
-              muteVideoOpponent={muteVideoOpponent}
-              showCamera={showCamera}
+              {...props}
             />
             <RTCViewRendered
               userId={streams[3].userId}
               stream={streams[3].stream}
-              muteVideoOpponent={muteVideoOpponent}
-              showCamera={showCamera}
+              {...props}
             />
           </View>
         </View>
@@ -153,6 +152,7 @@ const RTCViewGrid = ({streams, muteVideoOpponent, showCamera, muteUserId}) => {
     default:
       break;
   }
+
   return <View style={styles.blackView}>{RTCListView}</View>;
 };
 
@@ -177,5 +177,13 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
+  },
+  wrapMic: {
+    position: 'absolute',
+    zIndex: 99,
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
