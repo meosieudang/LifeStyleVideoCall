@@ -7,23 +7,26 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const URI =
   'https://cdn.pixabay.com/photo/2020/12/01/10/03/cathedral-5793622_1280.jpg';
 
-const RTCViewRendered = ({
-  userId,
-  stream,
-  showCamera,
-  muteVideoIds = [],
-  muteMicIds = [],
-  showMic,
-}) => {
-  const hasShowMic =
+const RTCViewRendered = (props) => {
+  const {
+    userId,
+    stream,
+    showCamera,
+    muteVideoIds = [],
+    muteMicIds = [],
+    showMic,
+    hasVideoCall,
+  } = props;
+  const hasMuteMic =
     (userId === 'localStream' && !showMic) || muteMicIds.includes(userId);
-  const hasShowCam =
+  const hasMuteCamera =
     (userId === 'localStream' && !showCamera) || muteVideoIds.includes(userId);
-  if (hasShowCam)
+
+  if (hasMuteCamera || !hasVideoCall)
     return (
-      <View style={styles.blackView}>
+      <View style={[styles.blackView, !hasVideoCall && styles.notVideoCall]}>
         <View style={styles.wrapMic}>
-          {hasShowMic && (
+          {hasMuteMic && (
             <Icon name={'mic-off-outline'} size={35} color={'white'} />
           )}
         </View>
@@ -45,14 +48,14 @@ const RTCViewRendered = ({
   return (
     <View style={styles.blackView}>
       <View style={styles.wrapMic}>
-        {hasShowMic && (
+        {hasMuteMic && (
           <Icon name={'mic-off-outline'} size={35} color={'white'} />
         )}
       </View>
       <RTCView
         mirror={true}
         objectFit="cover"
-        style={styles.blackView}
+        style={[styles.blackView]}
         key={userId}
         streamURL={stream.toURL()}
       />
@@ -61,7 +64,7 @@ const RTCViewRendered = ({
 };
 
 const RTCViewGrid = (props) => {
-  const {streams, showCamera, muteVideoIds} = props;
+  const {streams, showCamera, hasVideoCall} = props;
   const streamsCount = streams.length;
 
   let RTCListView = null;
@@ -185,5 +188,10 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  notVideoCall: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
   },
 });

@@ -1,6 +1,6 @@
 {
   "name": "@meosieudang/connectycube-sdk",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -12,7 +12,7 @@
     "ip8": "yarn ios --simulator='iPhone 8'"
   },
   "dependencies": {
-    "react-native-connectycube": "^3.7.7"
+    "react-native-connectycube": "^3.7.8"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
