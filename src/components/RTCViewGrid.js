@@ -35,12 +35,14 @@ const RTCViewRendered = (props) => {
           source={{uri: URI}}
           style={styles.absolute}
         />
-        <BlurView
+        <View style={styles.overlay} />
+
+        {/* <BlurView
           style={styles.absolute}
           blurType={'dark'}
           blurAmount={10}
           reducedTransparencyFallbackColor={'white'}
-        />
+        /> */}
       </View>
     );
 
@@ -193,5 +195,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
+  },
+  overlay: {
+    backgroundColor: 'black',
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    opacity: 0.7,
   },
 });
