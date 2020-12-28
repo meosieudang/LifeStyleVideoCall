@@ -151,6 +151,16 @@ export default class CallService {
     });
   };
 
+  processOnMessageListener = () => {
+    return new Promise((resolve, reject) => {
+      if (!this._session) {
+        reject();
+      } else {
+        resolve();
+      }
+    });
+  };
+
   switchCamera = (localStream) => {
     localStream.getVideoTracks().forEach((track) => track._switchCamera());
   };
