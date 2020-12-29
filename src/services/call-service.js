@@ -151,6 +151,21 @@ export default class CallService {
     });
   };
 
+  processOnUserNotAnswerListener(userId) {
+    return new Promise((resolve, reject) => {
+      if (!this._session) {
+        reject();
+      } else {
+        // const userName = this.getUserById(userId, 'name');
+        // const message = `${userName} did not answer`;
+
+        // this.showToast(message);
+
+        resolve();
+      }
+    });
+  }
+
   processOnMessageListener = () => {
     return new Promise((resolve, reject) => {
       if (!this._session) {
