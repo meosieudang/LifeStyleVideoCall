@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Image} from 'react-native';
+import {StyleSheet, View, Image, ActivityIndicator} from 'react-native';
 import {RTCView} from 'react-native-connectycube';
 import {BlurView} from '@react-native-community/blur';
 import Icon from 'react-native-vector-icons/Ionicons';
