@@ -16,6 +16,7 @@ const RTCViewRendered = (props) => {
     muteMicIds = [],
     showMic,
     hasVideoCall,
+    uriImage = URI,
   } = props;
   const hasMuteMic =
     (userId === 'localStream' && !showMic) || muteMicIds.includes(userId);
@@ -32,7 +33,7 @@ const RTCViewRendered = (props) => {
         </View>
         <Image
           key={'blurryImage'}
-          source={{uri: URI}}
+          source={{uri: uriImage}}
           style={styles.absolute}
         />
         <View style={styles.overlay} />
@@ -45,8 +46,12 @@ const RTCViewRendered = (props) => {
         /> */}
       </View>
     );
-
-  if (!stream) return null;
+  if (!stream)
+    return (
+      <View style={[styles.blackView, {justifyContent: 'center'}]}>
+        <ActivityIndicator />
+      </View>
+    );
   return (
     <View style={styles.blackView}>
       <View style={styles.wrapMic}>
@@ -66,7 +71,7 @@ const RTCViewRendered = (props) => {
 };
 
 const RTCViewGrid = (props) => {
-  const {streams, showCamera, hasVideoCall} = props;
+  const {streams, showCamera, hasVideoCall, uriImage} = props;
   const streamsCount = streams.length;
 
   let RTCListView = null;

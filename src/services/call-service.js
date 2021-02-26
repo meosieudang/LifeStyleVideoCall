@@ -162,6 +162,7 @@ export default class CallService {
         // this.showToast(message);
 
         resolve();
+        this.stopSounds();
       }
     });
   }
