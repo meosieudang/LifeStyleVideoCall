@@ -101,6 +101,7 @@ export default class CallService {
   }
 
   processOnRejectCallListener(session, userId, extension = {}) {
+    this.stopSounds();
     return new Promise((resolve, reject) => {
       if (userId === session.currentUserID) {
         this._session = null;

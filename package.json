@@ -1,6 +1,6 @@
 {
   "name": "@meosieudang/connectycube-sdk",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
